@@ -1,9 +1,13 @@
-
-
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 import uvicorn
-import json
+import logging
+
+# ✅ Set up logging so it appears in Render logs
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(message)s"
+)
 
 app = FastAPI()
 
@@ -14,8 +18,8 @@ async def mcp_handler(request: Request):
     user_input = payload.get("input", {}).get("body", "")
     bot_response = payload.get("output", {}).get("body", "")
 
-    print("📥 User Prompt:", user_input)
-    print("📤 Copilot Response:", bot_response)
+    logging.info(f"📥 User Prompt: {user_input}")
+    logging.info(f"📤 Copilot Response: {bot_response}")
 
     return JSONResponse({
         "status": "success",
@@ -23,5 +27,5 @@ async def mcp_handler(request: Request):
     })
 
 if __name__ == "__main__":
-    print("🚀 Starting MCP Server (HTTP)")
+    logging.info("🚀 Starting MCP Server (HTTP)")
     uvicorn.run(app, host="0.0.0.0", port=8503)
